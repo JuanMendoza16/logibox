@@ -1,0 +1,170 @@
+# ==========================================
+# LogiBox - Proyecto de Sistema de Gestión Logística Multi-sede
+# Estructura de desarrollo orientada a IA
+# Tecnologías: React.js (+SWC), Node.js, PostgreSQL con Supabase
+# ==========================================
+
+# -------------------------------------------------------------
+# 1. Definición del Problema
+# -------------------------------------------------------------
+El sistema LogiBox busca optimizar la comunicación y gestión de inventario entre múltiples sedes de una empresa logística mediana.
+Se requiere una aplicación web escalable que permita:
+- Gestionar productos, existencias y transferencias entre sedes.
+- Controlar niveles de stock y alertas de bajo inventario.
+- Facilitar la comunicación interna entre empleados, supervisores y gerentes.
+- Exportar datos a Excel y PDF.
+- Tener versión futura de escritorio (electrón) y API extensible.
+
+# -------------------------------------------------------------
+# 2. Arquitectura General
+# -------------------------------------------------------------
+Arquitectura propuesta: **Arquitectura en tres capas + API RESTful**
+Capas:
+  - Frontend (React + SWC)
+  - Backend (Node.js + Express)
+  - Base de datos (PostgreSQL gestionada por Supabase)
+  
+Estructura modular escalable:
+  - Separación clara entre lógica de presentación, negocio y datos.
+  - Comunicación vía JSON sobre HTTPS.
+  - Despliegue en servicios gratuitos (Vercel + Supabase Free Tier).
+  - Posible integración futura con Java (app de escritorio).
+
+# -------------------------------------------------------------
+# 3. Estructura del Proyecto
+# -------------------------------------------------------------
+/logibox
+│
+├── /frontend             # React + SWC (interfaz)
+│   ├── /public           # Archivos estáticos (iconos, manifest, favicon)
+│   ├── /src
+│   │   ├── /components   # Componentes UI reutilizables
+│   │   ├── /pages        # Pantallas principales (Dashboard, Sedes, Mensajería, Reportes)
+│   │   ├── /hooks        # Custom Hooks (estado global, API, autenticación)
+│   │   ├── /context      # Context API para roles y autenticación
+│   │   ├── /services     # Funciones para llamadas al backend y Supabase
+│   │   ├── /utils        # Funciones auxiliares (formato, validaciones, exportaciones)
+│   │   ├── /styles       # Estilos globales y variables CSS
+│   │   └── main.jsx      # Punto de entrada
+│   └── package.json
+│
+├── /backend              # Node.js + Express
+│   ├── /src
+│   │   ├── /routes       # Rutas API REST (usuarios, productos, sedes, reportes)
+│   │   ├── /controllers  # Controladores con lógica de negocio
+│   │   ├── /models       # Modelos de datos (Sequelize/pg)
+│   │   ├── /middlewares  # Autenticación JWT, validaciones, logging
+│   │   ├── /services     # Servicios externos (Supabase, notificaciones)
+│   │   ├── /utils        # Helpers comunes
+│   │   └── server.js     # Punto de entrada backend
+│   └── package.json
+│
+├── /common               # Tipos, constantes y modelos compartidos
+│   ├── roles.js
+│   ├── endpoints.js
+│   └── config.js
+│
+├── /docs                 # Documentación del proyecto
+│   ├── arquitectura.md
+│   ├── endpoints.md
+│   ├── esquema_db.png
+│   └── cronograma.md
+│
+└── /tests                # Pruebas unitarias y de integración
+    ├── frontend/
+    ├── backend/
+    └── mock_data/
+
+# -------------------------------------------------------------
+# 4. Funcionalidades Principales
+# -------------------------------------------------------------
+1. **Gestión de Inventario**
+   - Alta, baja y modificación de productos.
+   - Control de stock por sede.
+   - Alertas automáticas por bajo stock.
+   - Transferencias entre sedes.
+
+2. **Gestión de Usuarios y Roles**
+   - Autenticación con Supabase Auth.
+   - Roles: Empleado, Supervisor, Gerente.
+   - Permisos diferenciados por rol.
+
+3. **Panel de Control (Dashboard)**
+   - Visualización de indicadores clave (productos, sedes, alertas).
+   - Estadísticas gráficas básicas (con Recharts o Chart.js).
+
+4. **Comunicación Interna**
+   - Sistema de mensajería simple entre usuarios.
+   - Notificaciones visuales.
+
+5. **Exportación de Datos**
+   - Exportar inventario o reportes en CSV o PDF.
+   - Integración nativa con el navegador para impresión o guardado.
+
+6. **Escalabilidad y Futuro**
+   - API documentada con Swagger.
+   - Integración futura con Java (versión de escritorio).
+   - Posible conexión con dispositivos móviles (React Native).
+
+# -------------------------------------------------------------
+# 5. Base de Datos (Supabase / PostgreSQL)
+# -------------------------------------------------------------
+Tablas principales:
+  - users (id, name, email, role, sede_id)
+  - sedes (id, nombre, ubicación)
+  - productos (id, nombre, categoría, stock, sede_id, mínimo)
+  - transferencias (id, producto_id, origen_id, destino_id, cantidad, fecha)
+  - mensajes (id, emisor_id, receptor_id, mensaje, fecha)
+
+Relaciones:
+  - Una sede puede tener muchos productos.
+  - Un usuario pertenece a una sede.
+  - Una transferencia pertenece a dos sedes (origen, destino).
+
+# -------------------------------------------------------------
+# 6. Flujo de Desarrollo por Fases
+# -------------------------------------------------------------
+Fase 1 - Análisis y diseño (semana 1)
+  - Documentar requerimientos funcionales y técnicos.
+  - Definir modelo ER y endpoints API.
+
+Fase 2 - Implementación inicial (semana 2)
+  - Configurar entorno React + Node.js.
+  - Crear autenticación Supabase.
+  - CRUD de productos y sedes.
+
+Fase 3 - Integración y pruebas (semana 3)
+  - Probar flujo completo usuario → backend → base de datos.
+  - Añadir dashboard e informes.
+  - Exportación PDF/CSV.
+
+Fase 4 - Ajustes y despliegue
+  - Testing unitario (Jest, Supertest).
+  - Deploy frontend en Vercel, backend en Render.
+  - Documentar versión final.
+
+# -------------------------------------------------------------
+# 7. Buenas Prácticas (IA + Equipo Humano)
+# -------------------------------------------------------------
+- Código modular, autocomentado y versionado (Git).
+- Uso de commits semánticos.
+- Documentación automática de endpoints (Swagger).
+- Validaciones estrictas de entrada (Joi/Zod).
+- Separación de configuración por entorno (.env).
+- Evitar lógica duplicada entre backend y frontend.
+- Preferencia por Hooks y Context API sobre Redux.
+- Mantener compatibilidad con SWC para builds rápidas.
+
+# -------------------------------------------------------------
+# 8. Notas para la IA Desarrolladora
+# -------------------------------------------------------------
+- Mantener estructura modular.
+- Crear README con comandos de instalación y ejecución.
+- Autogenerar scripts base en package.json para test, lint y build.
+- Describir en comentarios cada endpoint API.
+- Nombrar componentes con PascalCase y archivos en kebab-case.
+- Priorizar mantenibilidad y claridad del código sobre optimización temprana.
+
+# -------------------------------------------------------------
+# Fin del archivo requirements.txt
+# -------------------------------------------------------------
