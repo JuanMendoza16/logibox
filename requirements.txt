@@ -1,0 +1,57 @@
+# ============================
+# LogiBox - IA Development Manifest
+# ============================
+
+# --- General ---
+nodejs >=18
+typescript
+pnpm OR npm
+
+# --- Frontend ---
+react
+react-dom
+vite
+@vitejs/plugin-react-swc
+zustand
+react-query
+axios
+tailwindcss
+postcss
+autoprefixer
+jsPDF
+xlsx
+vitest
+@testing-library/react
+
+# --- Backend ---
+fastify
+fastify-cors
+fastify-jwt
+supabase-js
+zod
+pino
+dotenv
+jsonwebtoken
+pg
+jest
+supertest
+
+# --- Database / Migrations ---
+supabase-cli
+prisma
+@prisma/client
+
+# --- Common ---
+openapi-types
+yaml
+typescript
+
+# --- Scripts / Tools ---
+eslint
+prettier
+concurrently
+nodemon
+
+# --- Optional (exportaciones) ---
+jspdf
+exceljs
